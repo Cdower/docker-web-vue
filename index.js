@@ -25,12 +25,12 @@ Vue.component('image-row', {
   },
   template: `
     <tr id='image-row'> 
-      <td v-if="!image.showdetail" v-bind:title="image.clippy"> {{ image.name }} </td>
-      <td v-for='tag in image.tags' v-if='tag.showdetail'> {{ tag.name }} </td>
-      <td><button v-for="tag in image.tags" v-clipboard:copy='image.clippy+tag.name'  v-on:click='imagebutontoggle(tag)' >{{tag.name}}</button></td>
+      <td v-bind:title="image.clippy"> {{ image.name }} <button v-for='tag in image.tags' v-if='tag.showdetail'>Delete {{ tag.name }} </button> </td>
+      <td><button v-for="tag in image.tags" v-bind:title="tag.taghovertext" v-clipboard:copy='image.clippy+tag.name'  v-on:click='imagebutontoggle(tag)' >{{tag.name}}</button></td>
     </tr>
     `
 })
+// <td v-for='tag in image.tags' v-if='tag.showdetail'> {{ tag.name }} </td> 
 
 Vue.component('image-table', {
   props: ['images'],
@@ -75,7 +75,8 @@ var images = new Vue({
           for( let tag in tags.tags){
 	    let tag_obj = { 
               name:       tags.tags[tag],
-              showdetail: false
+              showdetail: false,
+              taghovertext: 'Click to copy docker pull or to enable Delete image'
             }
             tag_arr.push(tag_obj);
           }
