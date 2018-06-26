@@ -10,15 +10,19 @@ Vue.component('image-row', {
   methods:{
     imagebutontoggle: function(tag) {
       var self = this;
-      self.image.showdetail=!tag.showdetail;
-      tag.showdetail=!tag.showdetail;
+      let visible = !tag.showdetail;
+      for(tag_ittr in self.image.tags){
+        self.image.tags[tag_ittr].showdetail=false;
+      }
+      self.image.showdetail=visible;
+      tag.showdetail=visible;
       console.log(self.image.name);
     }
   },
   template: `
     <tr> 
       <td v-if="!image.showdetail" v-bind:title="image.clippy"> {{ image.name }} </td>
-      <td v-for='tag in image.tags' v-if="image.showdetail"><div v-if='tag.showdetail'>{{ tag.name }}</div></td>
+      <td v-for='tag in image.tags' v-if='tag.showdetail'> {{ tag.name }} </td>
       <td><button v-for="tag in image.tags" v-on:click='imagebutontoggle(tag)' >{{tag.name}}</button></td>
     </tr>
     `

@@ -20,27 +20,6 @@
     <h1>Docker Vue</h1>
     <div id="images">
       <image-table v-bind:images='items'></image-table>
-      <table>
-        <thead>
-          <tr>
-            <th>Image Name</th>
-            <th>Tags</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for='item in items' >
-            <td v-if="!item.showdetail" v-bind:title="item.clippy">{{ item.name }}</td>
-            <td v-for='tag in item.tags' v-if="item.showdetail"><div v-if='tag.showdetail'>{{ tag.name }}</div></td>
-            <td><button v-for='tag in item.tags' v-on:click='imagebutontoggle'>{{ tag.name }}</button></td>
-            <!-- <td> <button v-on:click="">Get Image</button> </td> -->
-          </tr>
-          <!-- <image-item 
-            v-for="item in items"
-            v-bind:imagename="item"
-            v-bind:key="item.id">
-          </image-item> -->
-        </tbody>
-      </table>
     </div>
 
     <script src="index.js"></script>
