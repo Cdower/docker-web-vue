@@ -21,6 +21,7 @@ var images = new Vue({
       for(var repo in data.repositories){
         console.log(data.repositories[repo]);
         $.get( apiURL+data.repositories[repo]+'/tags/list', function( tags ) {
+          tags.clippy = "docker pull "+window.location.origin+'/'+tags.name+':'+tags.tags[0];
           self.items.push(tags);
           console.log(tags);
         })
@@ -30,7 +31,6 @@ var images = new Vue({
     });
 
     }
-
   }
 });
 
