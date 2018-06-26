@@ -25,8 +25,8 @@ Vue.component('image-row', {
   },
   template: `
     <tr id='image-row'> 
-      <td v-bind:title="image.clippy"> {{ image.name }} <button v-for='tag in image.tags' v-if='tag.showdetail'>Delete {{ tag.name }} </button> </td>
-      <td><button v-for="tag in image.tags" v-bind:title="tag.taghovertext" v-clipboard:copy='image.clippy+tag.name'  v-on:click='imagebutontoggle(tag)' >{{tag.name}}</button></td>
+      <td v-bind:title="image.clippy" class="name"> {{ image.name }} <button class=deletebutton v-for='tag in image.tags' v-if='tag.showdetail'>Delete {{ tag.name }} </button> </td>
+      <td><button v-for="tag in image.tags" v-bind:title="tag.taghovertext" v-clipboard:copy='image.clippy+tag.name'  v-on:click='imagebutontoggle(tag)' class="tags" >{{tag.name}}</button></td>
     </tr>
     `
 })
@@ -38,8 +38,8 @@ Vue.component('image-table', {
   <table id='image-table'>
     <thead>
       <tr id='image-header'>
-        <th>Image Name</th>
-        <th>Tags</th>
+        <th class="name">Image Name</th>
+        <th class="tags">Tags</th>
       </tr>
     </thead>
     <tbody>
