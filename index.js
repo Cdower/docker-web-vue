@@ -19,10 +19,11 @@ var images = new Vue({
     var self = this;
     $.get( apiURL+'_catalog', function( data ) {
       for(var repo in data.repositories){
-        $.get( apiURL+repo+'/tags/list', function( tags ) {
+        console.log(data.repositories[repo]);
+        $.get( apiURL+data.repositories[repo]+'/tags/list', function( tags ) {
           self.items.push(tags);
           console.log(tags);
-        }
+        })
       }
       //self.items = data.repositories;
       console.log(self.items);

@@ -23,11 +23,13 @@
         <thead>
           <tr>
             <th>Image Name</th>
+            <th>Tags</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for='item in items'>
-            <td> {{ item }} </td>
+            <td> {{ item.name }} </td>
+            <td> {{ item.tags }} </td>
           </tr>
           <!-- <image-item 
             v-for="item in items"
