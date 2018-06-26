@@ -1,4 +1,4 @@
-var apiURL = window.location.origin +'/v2/'
+var registryURL = window.location.origin
 
 Vue.component('image-item', {
   props: ['imagename'],
@@ -7,19 +7,49 @@ Vue.component('image-item', {
 
 Vue.component('image-row', {
   props: ['image'],
+  methods:{
+    imagebutontoggle: function(tag) {
+      var self = this;
+      self.image.showdetail=!tag.showdetail;
+      tag.showdetail=!tag.showdetail;
+      console.log(self.image.name);
+    }
+  },
   template: `
     <tr> 
-      <td v-bind:title="image.clippy"> {{ item.name }} </td>
-      <td><button v-for="tag in image.tags">{{tag}}</button>>/td>
-      <div v-if="image.showdetail">Secret Sauce</div>
+      <td v-if="!image.showdetail" v-bind:title="image.clippy"> {{ image.name }} </td>
+      <td v-for='tag in image.tags' v-if="image.showdetail"><div v-if='tag.showdetail'>{{ tag.name }}</div></td>
+      <td><button v-for="tag in image.tags" v-on:click='imagebutontoggle(tag)' >{{tag.name}}</button></td>
     </tr>
     `
+})
+
+Vue.component('image-table', {
+  props: ['images'],
+  template: `
+  <table id='image-table'>
+    <thead>
+      <tr>
+        <th>Image Name</th>
+        <th>Tags</th>
+      </tr>
+    </thead>
+    <tbody>
+      <image-row
+        v-for='image in images'
+        v-bind:image='image'
+        v-bind:key='image.id' >
+      </image-row>
+    </tbody>
+  </table> 
+  `
 })
 
 var images = new Vue({ 
   el: '#images',
   data: {
-    items: []
+    items: [],
+    apiURL: registryURL +'/v2/'
   },
   created: function () {
     this.fetchData();
@@ -28,12 +58,11 @@ var images = new Vue({
   methods: {
     fetchData: function () {
     var self = this;
-    $.get( apiURL+'_catalog', function( data ) {
-      for(var repo in data.repositories){
-        //console.log(data.repositories[repo]);
-        $.get( apiURL+data.repositories[repo]+'/tags/list', function( tags ) {
+    $.get( self.apiURL+'_catalog', function( data ) {
+      for(let repo in data.repositories){
+        $.get( self.apiURL+data.repositories[repo]+'/tags/list', function( tags ) {
           tags.id = repo;
-          tags.clippy = "docker pull "+window.location.origin+'/'+tags.name+':'+tags.tags[0];
+          tags.clippy = "docker pull "+registryURL+'/'+tags.name+':'+tags.tags[0];
           let tag_arr = []
           for( let tag in tags.tags){
 	    let tag_obj = { 
@@ -42,19 +71,17 @@ var images = new Vue({
             }
             tag_arr.push(tag_obj);
           }
-          console.log(tag_arr);
           tags.showdetail = false;
           tags.tags = tag_arr;
           self.items.push(tags);
-          //console.log(tags);
         })
       }
-      //self.items = data.repositories;
-      //console.log(self.items);
     });
 
+    },
+    imagebutontoggle: function () {
+      var self = this;
+      console.log(self.items);
     }
   }
 });
-
-//window.location.origin

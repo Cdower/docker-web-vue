@@ -19,6 +19,7 @@
   <div id="main">
     <h1>Docker Vue</h1>
     <div id="images">
+      <image-table v-bind:images='items'></image-table>
       <table>
         <thead>
           <tr>
@@ -27,10 +28,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for='item in items'>
+          <tr v-for='item in items' >
             <td v-if="!item.showdetail" v-bind:title="item.clippy">{{ item.name }}</td>
-            <td v-if="item.showdetail">Secret sauce</td>
-            <td><button v-for='tag in item.tags'>{{ tag.name }}</button></td>
+            <td v-for='tag in item.tags' v-if="item.showdetail"><div v-if='tag.showdetail'>{{ tag.name }}</div></td>
+            <td><button v-for='tag in item.tags' v-on:click='imagebutontoggle'>{{ tag.name }}</button></td>
             <!-- <td> <button v-on:click="">Get Image</button> </td> -->
           </tr>
           <!-- <image-item 
