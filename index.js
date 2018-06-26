@@ -8,7 +8,7 @@ Vue.component('image-item', {
 var images = new Vue({ 
   el: '#images',
   data: {
-    items: null
+    items: []
   },
   created: function () {
     this.fetchData();
@@ -20,11 +20,11 @@ var images = new Vue({
     $.get( apiURL+'_catalog', function( data ) {
       for(var repo in data.repositories){
         $.get( apiURL+repo+'/tags/list', function( tags ) {
-          //self.items.push(tags);
+          self.items.push(tags);
           console.log(tags);
         }
       }
-      self.items = data.repositories;
+      //self.items = data.repositories;
       console.log(self.items);
     });
 
