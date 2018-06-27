@@ -21,11 +21,41 @@ Vue.component('image-row', {
       self.image.showdetail=visible;
       tag.showdetail=visible;
       console.log(self.image.name);
+    },
+    deleteimage: function(image, tag) {
+      var self = this;
+      $.ajax({
+        type: "GET",
+        headers: {
+          "Accept":"application/vnd.docker.distribution.manifest.v2+json"
+        },
+        url: registryURL+'/v2/'+image.name+'/manifests/'+tag.name,
+         
+        success: function( manifest ) {
+          console.log(manifest);
+          //var manifestJSON = JSON.parse(manifest);
+          var deletedLayers = []
+          for(let layer in manifest.layers){
+            $.ajax({
+              type: "DELETE",
+              headers: {
+                "Accept":"application/vnd.docker.distribution.manifest.v2+json"
+              },
+              url: registryURL+'/v2/'+image.name+'/manifests/'+manifest.layers[layer].digest,
+              success: function(msg){
+                deletedLayers.push(manifest.layers[layer].digest);
+              }
+            });
+            console.log(manifest.layers[layer].digest);
+          }
+          alert(registryURL+'/'+image.name+" layers deleted: \n"+deletedLayers);
+        }
+      });
     }
   },
   template: `
     <tr id='image-row'> 
-      <td v-bind:title="image.clippy" class="name"> {{ image.name }} <button class=deletebutton v-for='tag in image.tags' v-if='tag.showdetail'>Delete {{ tag.name }} </button> </td>
+      <td v-bind:title="image.clippy" class="name"> {{ image.name }} <button class=deletebutton v-for='tag in image.tags' v-if='tag.showdetail' v-on:click='deleteimage(image, tag)' > Delete {{ tag.name }} </button> </td>
       <td><button v-for="tag in image.tags" v-bind:title="tag.taghovertext" v-clipboard:copy='image.clippy+tag.name'  v-on:click='imagebutontoggle(tag)' class="tags" >{{tag.name}}</button></td>
     </tr>
     `
