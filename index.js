@@ -31,24 +31,20 @@ Vue.component('image-row', {
         },
         url: registryURL+'/v2/'+image.name+'/manifests/'+tag.name,
          
-        success: function( manifest ) {
-          console.log(manifest);
-          //var manifestJSON = JSON.parse(manifest);
-          var deletedLayers = []
-          for(let layer in manifest.layers){
+        success: function( manifest, textStatus, jqXHR ) {
+          //console.log(manifest);
+          //console.log(jqXHR.getResponseHeader('Docker-Content-Digest'));
             $.ajax({
               type: "DELETE",
               headers: {
                 "Accept":"application/vnd.docker.distribution.manifest.v2+json"
               },
-              url: registryURL+'/v2/'+image.name+'/manifests/'+manifest.layers[layer].digest,
+              url: registryURL+'/v2/'+image.name+'/manifests/'+jqXHR.getResponseHeader('Docker-Content-Digest'),
               success: function(msg){
-                deletedLayers.push(manifest.layers[layer].digest);
+                console.log("deleted tag: "+image.name+':'+tag.name+' '+jqXHR.getResponseHeader('Docker-Content-Digest') );
               }
             });
-            console.log(manifest.layers[layer].digest);
-          }
-          alert(registryURL+'/'+image.name+" layers deleted: \n"+deletedLayers);
+          alert(registryURL+'/'+image.name+" layers deleted: \n"+jqXHR.getResponseHeader('Docker-Content-Digest'));
         }
       });
     }
